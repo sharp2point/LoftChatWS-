@@ -1,0 +1,22 @@
+{
+  "name": "loftchatws_server",
+  "version": "1.0.0",
+  "description": "websocket server",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Blinov Evgeny",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ws": "^8.12.0"
+  },
+  "optionalDependencies": {
+    "utf-8-validate": "^6.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
