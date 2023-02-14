@@ -14,6 +14,17 @@ export class Auth extends HTMLElement {
     });
     const submit = this.dom.submit;
     submit.addEventListener("click", (e) => {
+      const ws = new WebSocket("ws://localhost:8000");
+
+      ws.onopen = (event) => {
+        ws.send(`Hi: ${form.elements.nik.value}`);
+      };
+      ws.onmessage = (message) => {
+        console.log(message.data);
+      };
+      ws.onclose = () => {
+        console.log("Socket close");
+      };
       console.log("NIK:", form.elements.nik.value);
     });
   }

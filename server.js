@@ -3,6 +3,7 @@ import * as http from "node:http";
 import * as path from "node:path";
 import * as dotenv from "dotenv";
 import { MIME_TYPES } from "./src/utils/mime.js";
+import { createWSServer } from "./ws_server.js";
 
 dotenv.config();
 
@@ -26,14 +27,16 @@ const prepareFile = async (url) => {
   return { found, ext, stream };
 };
 
-http
-  .createServer(async (req, res) => {
-    const file = await prepareFile(req.url);
-    const statusCode = file.found ? 200 : 404;
-    const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
+const server = http.createServer(async (req, res) => {
+  const file = await prepareFile(req.url);
+  const statusCode = file.found ? 200 : 404;
+  const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
 
-    res.writeHead(statusCode, { "Content-Type": mimeType });
-    file.stream.pipe(res);
-    console.log(`Server: ${req.method} ${req.url} ${statusCode}`);
-  })
-  .listen(PORT);
+  res.writeHead(statusCode, { "Content-Type": mimeType });
+  file.stream.pipe(res);
+  console.log(`Server: ${req.method} ${req.url} ${statusCode}`);
+});
+
+createWSServer(server);
+
+server.listen(PORT);
