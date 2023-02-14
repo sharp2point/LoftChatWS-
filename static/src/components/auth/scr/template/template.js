@@ -78,7 +78,7 @@ export default {
             border: none;
             border-bottom:1px solid #465461;
             background:#17212B; 
-
+            color: white;
         }
         .auth-form__nik:focus{
             background:#17212B; 
