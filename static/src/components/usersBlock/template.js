@@ -3,17 +3,13 @@ export default {
     return `${this.html(props)}${this.css(props)}`;
   },
   html(props) {
-    return `<div class="users-block">
+    return `<div class="users-block-items">
 
         </div>`;
   },
   css(props) {
     return `<style>
-            .users-block{
-              width:200px;
-              height:500px;
-                background:#17212B;
-                border: 1px solid white;
+            .users-block-items{
             }
         </style>`;
   },

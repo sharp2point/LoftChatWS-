@@ -29,7 +29,7 @@ export default {
             justify-content: flex-start;
             align-items: center;
             width: 452px;
-            height: 497px;
+            height: 450px;
             background: #17212B;            
             padding:1.5rem;
             color: white;
