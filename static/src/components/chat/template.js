@@ -23,6 +23,11 @@ export default {
             <div class="chat-users-owner"></div>
             <users-block class="users-block"/>
           </div>
+          <div class="chat-messages">
+            <header class="chat-messages-header"></header>
+            <div class="chat-messages-chat"></div>
+            <chat-post class="chat-messages-post"/>
+          </div>
           <chat-auth class="chat-auth"/>
         </div>
     `;
@@ -33,6 +38,7 @@ export default {
             width:100vw;
             height:100vh;
             display: flex;
+            flex-direction: row;
             justify-content:flex-start;
             align-items:center;
             background: rgba(23, 33, 43, 1);
@@ -44,9 +50,33 @@ export default {
           transform: translate(-50%,-47%);
           box-shadow: 0 0 10px rgba(73, 83, 153, 0.5);
         }
+        .chat-messages{
+          width: 78%;
+          height:100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .chat-messages-header{
+          width:100%;
+          height:56px;
+          margin-bottom:0.5rem;
+          background: #17212B;
+        }
+        .chat-messages-chat{
+          width:100%;
+          height: 100%;
+          background: #0E1621;
+        }
+        .chat-messages-post{
+          width:100%;
+          margin-top:0.5rem;
+        }
         .chat-users{
             width: 20%;
             height:100%;
+            border-right:3px solid #0E1621;
             overflow: hidden;
             overflow-y: scroll;
         }
