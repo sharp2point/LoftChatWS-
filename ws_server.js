@@ -16,7 +16,7 @@ const updateUsers = () => {
   });
 };
 const newClient = (ws, id, data) => {
-  clients.set(id, { ws: ws, name: `${data.name}:${id}` });
+  clients.set(id, { ws: ws, name: `${data.data.name}:${id}` });
   updateUsers();
   return id;
 };
@@ -32,8 +32,10 @@ export const createWSServer = (server) => {
 
     ws.on("message", (msg) => {
       const data = JSON.parse(msg);
-      if (data.new) {
-        uID(ws, newClient(ws, id, data));
+      switch(data.type){
+        case "config:client":{
+          uID(ws, newClient(ws, id, data));
+        }
       }
     });
     ws.on("close", () => {

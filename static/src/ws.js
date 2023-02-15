@@ -7,12 +7,12 @@ export default class {
   init(value) {
     this.ws = new WebSocket(this.host);
     this.ws.onopen = (e) => {
-      this.ws.send(JSON.stringify({ new: true, name: value }));
+      this.ws.send(
+        JSON.stringify({ type: "config:client", data: { name: value } })
+      );
     };
-    this.ws.onclose = () => {
-      
-    };
-    
+    this.ws.onclose = () => {};
+
     return this.ws;
   }
 }
