@@ -3,6 +3,17 @@
   padding: 0;
   font-size: 16px;
   box-sizing: border-box;
+  --background-color: #0e1621;
+  --background-color2: #17212b;
+  --background-color3: rgb(33, 40, 51);
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-color3);
 }
 .hide {
   display: none;
