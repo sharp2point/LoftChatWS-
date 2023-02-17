@@ -3,9 +3,12 @@
   padding: 0;
   font-size: 16px;
   box-sizing: border-box;
+  --time-color: #7f91a4;
+  --blue-color: #5387c1;
   --background-color: #0e1621;
   --background-color2: #17212b;
   --background-color3: rgb(33, 40, 51);
+  --background-message: rgba(24, 38, 51, 1);
 }
 body {
   width: 100vw;

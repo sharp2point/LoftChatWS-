@@ -30,14 +30,14 @@ export default class Chat extends HTMLElement {
     this.owner = name;
     place.innerHTML = `<user-item avatar="${avatar}" name="${name}" hello="${hello}"/>`;
   }
-  #autorizeUser(component) {
-    component.addEventListener("click", (e) => {
+  #autorizeUser(authComponent) {
+    authComponent.addEventListener("click", (e) => {
       if (e.target.tagName === "BUTTON") {
         const ownerName = e.path[1][0].value.trim();
         if (ownerName.length >= 3) {
           this.ws.init(this, ownerName, this.#callbackWSData);
 
-          component.classList.add("hide");
+          authComponent.classList.add("hide");
           this.#setOwnerUser(this.ownerPlace, {
             avatar: "",
             name: ownerName,
@@ -48,7 +48,7 @@ export default class Chat extends HTMLElement {
     });
   }
   #callbackWSData(data) {
-    // возвращает данные события ws:onmessage
+    // забирает данные события ws:onmessage
     switch (data.type) {
       case "config:id": {
         DB.setOwnerID(data.data.split(":")[0]);
@@ -59,7 +59,7 @@ export default class Chat extends HTMLElement {
         break;
       }
       case "message": {
-        this.chatBlock.addNewMessage(data.data);
+        this.chatBlock.addNewMessage(JSON.parse(data.data));
         break;
       }
     }

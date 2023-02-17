@@ -1,4 +1,5 @@
 import DB from "../../db.js";
+import MessageChat from "../message/message.js";
 import template from "./template.js";
 
 export default class Post extends HTMLElement {
@@ -38,7 +39,24 @@ export default class Post extends HTMLElement {
     this.subscribers.push({ scope: scope, callback: fnc });
   }
   addNewMessage(message) {
-    this.dom.chat.innerHTML += `<p class="message">${message}</p>`;
+    const avatar = new Image();
+    avatar.src = `./img/users/${message.ownerId}.png`;
+    function setData(isAvatar){
+      const path = isAvatar ? `./img/users/${message.ownerId}.png`: `./img/default.png`;
+      return {
+        ownerId: message.ownerId,
+        avatar: path,
+        name: DB.getUserFromID(message.ownerId),
+        text: message.data,
+        time: new Date(Date.now()).toTimeString().slice(0, 8),
+      }
+    }
+    avatar.addEventListener("load", () => {
+      this.dom.chat.appendChild(new MessageChat(setData(true)));
+    });
+    avatar.addEventListener("error", () => {
+      this.dom.chat.appendChild(new MessageChat(setData(false)));
+    });
   }
 }
 
