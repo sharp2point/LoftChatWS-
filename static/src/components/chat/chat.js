@@ -28,7 +28,7 @@ export default class Chat extends HTMLElement {
   #setOwnerUser(place, props) {
     const { avatar, name, hello } = props;
     this.owner = name;
-    place.innerHTML = `<user-item avatar="${avatar}" name="${name}" hello="${hello}"/>`;
+    place.appendChild(new UserItem(DB.getOwnerID(), avatar, name, hello));
   }
   #autorizeUser(authComponent) {
     authComponent.addEventListener("click", (e) => {
@@ -52,6 +52,7 @@ export default class Chat extends HTMLElement {
     switch (data.type) {
       case "config:id": {
         DB.setOwnerID(data.data.split(":")[0]);
+
         break;
       }
       case "config:users": {
