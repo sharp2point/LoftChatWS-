@@ -4,7 +4,7 @@ import * as path from "node:path";
 import * as dotenv from "dotenv";
 import formidable, { errors as formidableErrors } from "formidable";
 import { MIME_TYPES } from "./src/utils/mime.js";
-import { createWSServer, getWSUID, setAvatarPath } from "./ws_server.js";
+import { createWSServer, setAvatarPath } from "./ws_server.js";
 
 dotenv.config();
 

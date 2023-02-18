@@ -8,7 +8,6 @@ const messages = [];
 let avatarPath = "";
 let id;
 
-export const getWSUID = () => id;
 
 const updateUsers = () => {
   clients.forEach((value, key, map) => {
