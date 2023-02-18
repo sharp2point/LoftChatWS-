@@ -1,11 +1,7 @@
 export default new (class {
   constructor() {
     this.ownerID = null;
-    this.users = [
-      /* хранит данные о пользователе в формате: */
-      /* "a44d7bf2-bf9f-44fd-92dc-84e4597bf216":"Евгений" */
-    ];
-    this.usersMap = new Map();
+    this.usersMap = new Map(); // id: {name,avatar,hello}
   }
   setOwnerID(value) {
     this.ownerID = value;
@@ -14,11 +10,16 @@ export default new (class {
     return this.ownerID;
   }
   setUsers(value) {
-    this.users = value;
-    this.usersMap.set(...value[0].split(":").reverse());
+    value.forEach((data) => {
+      this.usersMap.set(data.id, {
+        name: data.name,
+        avatar: data.avatar,
+        hi: data.hi,
+      });
+    });
   }
   getUsers() {
-    return this.users;
+    return this.usersMap;
   }
   getUserFromID(id) {
     return this.usersMap.get(id);

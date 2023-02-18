@@ -16,27 +16,30 @@ export default {
   },
   html(props) {
     const img = props.avatar || "./img/default.png";
-
-    return `
+    const base = `
     <div class="item">
         <img  class="item-avatar" src="${img}"/>
         <div class="item-data">
             <span class="item-data-name">${props.name}</span>
-            <span class="item-data-hello">${props.hello}</span>
+            <span class="item-data-hello">${props.hi}</span>
         </div>    
-    </div>
-    <div class="item-dialog">
-        <form class="dialog-form"  method="post" enctype="multipart/form-data"  action="http://localhost:8000/api/avatar">
-            <input type="file" class="dialog-form-file" name="avatar" accept="image/*"/>
-        </form>
-        <img  class="item-dialog-avatar" src="${img}"/>
-        <span class="item-dialog-text">Область для профильной фотографии</span>
-        <div class="item-dialog-actions">
-            <button class="item-dialog-button cancel-button">ОТМЕНА</button>
-            <button class="item-dialog-button save-button ">СОХРАНИТЬ</button>
-        </div>
-    </div>
+    </div> 
     `;
+    const dialog = `
+        <div class="item-dialog">
+            <form class="dialog-form"  method="post" enctype="multipart/form-data"  action=${props.host}>
+                <input type="file" class="dialog-form-file" name="avatar" accept="image/*"/>
+            </form>
+            <img  class="item-dialog-avatar" src="${img}"/>
+            <span class="item-dialog-text">Область для профильной фотографии</span>
+            <div class="item-dialog-actions">
+                <button class="item-dialog-button cancel-button">ОТМЕНА</button>
+                <button class="item-dialog-button save-button ">СОХРАНИТЬ</button>
+            </div>
+        </div>
+    `;
+
+    return props.host ? `${base}${dialog}` : base;
   },
   css(props) {
     return `<style>

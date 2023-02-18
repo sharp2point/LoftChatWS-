@@ -38,7 +38,7 @@ export default class Chat extends HTMLElement {
     switch (data.type) {
       case "config:id": {
         DB.setOwnerID(data.data.split(":")[0]);
-        this.dom.owner.appendChild(new UserItem(DB.getOwnerID()));
+        this.dom.owner.appendChild(new UserItem(DB.getOwnerID(), this.host));
         break;
       }
       case "config:users": {
@@ -50,22 +50,20 @@ export default class Chat extends HTMLElement {
         break;
       }
     }
-    this.#updateUsers(this.dom.usersBlock);
+    this.#updateUsers();
   }
   #callbackChat(message) {
     //забирает сообщения из чата
     this.ws.sendUserMessage({ ownerId: DB.getOwnerID(), data: message });
   }
-  #updateUsers(place) {
-    place.innerHTML = "";
-    this.dom.chatBlock.setUsersCounter(DB.getUsers().length);
-    DB.getUsers()
-      .filter((user) => user.split(":")[1] !== DB.getOwnerID())
-      .forEach((user) => {
-        place.innerHTML += `<user-item avatar="" name="${
-          user.split(":")[0]
-        }" hello="hi all !"/>`;
-      });
+  #updateUsers() {
+    const users = DB.getUsers();
+    this.dom.chatBlock.setUsersCounter(DB.getUsers().size);
+    this.dom.usersBlock.clear();
+    users.forEach((val, key, map) => {
+      if (key !== DB.getOwnerID())
+        this.dom.usersBlock.appendChild(new UserItem(key));
+    });
   }
 }
 

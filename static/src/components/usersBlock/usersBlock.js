@@ -7,6 +7,11 @@ export default class UsersBlock extends HTMLElement {
   connectedCallback() {
     this.innerHTML = template.render();
   }
+  clear() {
+    while (this.firstChild) {
+      this.removeChild(this.lastChild);
+    }
+  }
 }
 
 if (!customElements.get("users-block")) {
