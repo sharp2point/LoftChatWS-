@@ -7,6 +7,8 @@ export default {
       dialogSaveButton: scope.querySelector(".cancel-button"),
       dialogCancelButton: scope.querySelector(".save-button"),
       dialogAvatar: scope.querySelector(".item-dialog-avatar"),
+      dialogForm: scope.querySelector(".dialog-form"),
+      dialogFile: scope.querySelector(".dialog-form-file"),
     };
   },
   render(props) {
@@ -24,6 +26,9 @@ export default {
         </div>    
     </div>
     <div class="item-dialog">
+        <form class="dialog-form"  method="post" enctype="multipart/form-data"  action="http://localhost:8000/api/avatar">
+            <input type="file" class="dialog-form-file" name="avatar" accept="image/*"/>
+        </form>
         <img  class="item-dialog-avatar" src="${img}"/>
         <span class="item-dialog-text">Область для профильной фотографии</span>
         <div class="item-dialog-actions">
@@ -35,9 +40,9 @@ export default {
   },
   css(props) {
     return `<style>
-    .hide-me{
-        display:none;
-    }
+        .dialog-form{
+            display:none;
+        }
         .item-dialog{
             position: absolute;
             top:50%;

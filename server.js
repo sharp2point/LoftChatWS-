@@ -2,6 +2,7 @@ import * as fs from "node:fs";
 import * as http from "node:http";
 import * as path from "node:path";
 import * as dotenv from "dotenv";
+import formidable, { errors as formidableErrors } from "formidable";
 import { MIME_TYPES } from "./src/utils/mime.js";
 import { createWSServer } from "./ws_server.js";
 
@@ -28,13 +29,43 @@ const prepareFile = async (url) => {
 };
 
 const server = http.createServer(async (req, res) => {
-  const file = await prepareFile(req.url);
-  const statusCode = file.found ? 200 : 404;
-  const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
+  if (req.method.toLowerCase() === "get") {
+    const file = await prepareFile(req.url);
+    const statusCode = file.found ? 200 : 404;
+    const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
 
-  res.writeHead(statusCode, { "Content-Type": mimeType });
-  file.stream.pipe(res);
-  console.log(`Server: ${req.method} ${req.url} ${statusCode}`);
+    res.writeHead(statusCode, { "Content-Type": mimeType });
+    file.stream.pipe(res);
+    console.log(`Server: ${req.method} ${req.url} ${statusCode}`);
+  }
+  if (req.url === "/api/avatar" && req.method.toLowerCase() === "post") {
+    const form = formidable({});
+
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        if (err.code === formidableErrors.maxFieldsExceeded) {
+        }
+        res.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
+        res.end(String(err));
+        return;
+      }
+      const prevpath = files.avatar[0].filepath;
+      const name = files.avatar[0].newFilename;
+      const newpath = `./static/img/users/${name}.${
+        files.avatar[0].mimetype.split("/")[1]
+      }`;
+      var is = fs.createReadStream(prevpath);
+      var os = fs.createWriteStream(newpath);
+      is.pipe(os);
+      is.on("end", function () {
+        fs.unlinkSync(prevpath);
+      });
+      res.statusCode = 204;
+      res.end();
+    });
+
+    return;
+  }
 });
 
 createWSServer(server);

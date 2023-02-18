@@ -1,12 +1,13 @@
 import template from "./template.js";
+import DB from "../../db.js";
 
 export default class UserItem extends HTMLElement {
-  constructor(ownerId, avatar, name, hello) {
+  constructor(ownerId) {
     super();
     this.ownerId = ownerId;
-    this.avatar = avatar;
-    this.name = name;
-    this.hello = hello;
+    this.avatar = "";
+    this.name = DB.getUserFromID(ownerId);
+    this.hello = "hello";
   }
   connectedCallback() {
     this.innerHTML = template.render({
@@ -36,13 +37,11 @@ export default class UserItem extends HTMLElement {
     return e.target.classList.contains(className);
   }
   #openFileDialog() {
-    let input = document.createElement("input");
-    input.type = "file";
-    input.onchange = () => {
-      let files = Array.from(input.files);
-      console.log(files);
-    };
-    input.click();
+    this.dom.dialogFile.click();
+
+    this.dom.dialogFile.addEventListener("change", (e) => {
+      this.dom.dialogForm.submit();
+    });
   }
 }
 

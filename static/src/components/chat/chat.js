@@ -10,25 +10,16 @@ import template from "./template.js";
 export default class Chat extends HTMLElement {
   constructor() {
     super();
-    this.owner = "";
   }
   connectedCallback() {
     this.innerHTML = template.render();
     this.dom = template.map(this);
-    this.ownerPlace = this.dom.owner;
-    this.usersBlock = this.dom.usersBlock;
-    this.chatBlock = this.dom.chatBlock;
-    this.chatBlock.setNewSubscriber(this, this.#callbackChat);
+    this.dom.chatBlock.setNewSubscriber(this, this.#callbackChat);
 
     this.host = this.getAttribute("host");
     this.ws = new WS(this.host);
 
     this.#autorizeUser(this.dom.auth);
-  }
-  #setOwnerUser(place, props) {
-    const { avatar, name, hello } = props;
-    this.owner = name;
-    place.appendChild(new UserItem(DB.getOwnerID(), avatar, name, hello));
   }
   #autorizeUser(authComponent) {
     authComponent.addEventListener("click", (e) => {
@@ -38,11 +29,6 @@ export default class Chat extends HTMLElement {
           this.ws.init(this, ownerName, this.#callbackWSData);
 
           authComponent.classList.add("hide");
-          this.#setOwnerUser(this.ownerPlace, {
-            avatar: "",
-            name: ownerName,
-            hello: "Hi all !",
-          });
         }
       }
     });
@@ -52,7 +38,7 @@ export default class Chat extends HTMLElement {
     switch (data.type) {
       case "config:id": {
         DB.setOwnerID(data.data.split(":")[0]);
-
+        this.dom.owner.appendChild(new UserItem(DB.getOwnerID()));
         break;
       }
       case "config:users": {
@@ -60,11 +46,11 @@ export default class Chat extends HTMLElement {
         break;
       }
       case "message": {
-        this.chatBlock.addNewMessage(JSON.parse(data.data));
+        this.dom.chatBlock.addNewMessage(JSON.parse(data.data));
         break;
       }
     }
-    this.#updateUsers(this.usersBlock);
+    this.#updateUsers(this.dom.usersBlock);
   }
   #callbackChat(message) {
     //забирает сообщения из чата
@@ -72,7 +58,7 @@ export default class Chat extends HTMLElement {
   }
   #updateUsers(place) {
     place.innerHTML = "";
-    this.chatBlock.setUsersCounter(DB.getUsers().length);
+    this.dom.chatBlock.setUsersCounter(DB.getUsers().length);
     DB.getUsers()
       .filter((user) => user.split(":")[1] !== DB.getOwnerID())
       .forEach((user) => {

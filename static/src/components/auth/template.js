@@ -30,9 +30,11 @@ export default {
             align-items: center;
             width: 452px;
             height: 450px;
-            background: #17212B;            
+            background: var(--background-color2);            
             padding:1.5rem;
             color: white;
+            box-shadow: 0 0 0.5rem var(--blue-color);
+            border-radius:0.6rem;
         }
         .auth-icon{
             width: 139px;
