@@ -28,6 +28,7 @@ export default {
     const dialog = `
         <div class="item-dialog">
             <form class="dialog-form"  method="post" enctype="multipart/form-data"  action=${props.host}>
+                <input type="text" class="dialog-id" name="id" value="${props.ownerId}"/>
                 <input type="file" class="dialog-form-file" name="avatar" accept="image/*"/>
             </form>
             <img  class="item-dialog-avatar" src="${img}"/>

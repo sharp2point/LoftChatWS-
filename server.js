@@ -4,11 +4,14 @@ import * as path from "node:path";
 import * as dotenv from "dotenv";
 import formidable, { errors as formidableErrors } from "formidable";
 import { MIME_TYPES } from "./src/utils/mime.js";
-import { createWSServer, getWSUID } from "./ws_server.js";
+import { createWSServer, getWSUID, setAvatarPath } from "./ws_server.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT ?? 8001;
+const PORT = process.env.PORT;
+const AVATAR_API_ROUT = process.env.AVATAR_API_ROUT;
+const SERVER_IMG_PATH = process.env.SERVER_IMG_PATH;
+const CLIENT_IMG_PATH = process.env.CLIENT_IMG_PATH;
 const STATIC_PATH = path.join(process.cwd(), "./static/");
 const toBool = [() => true, () => false];
 
@@ -39,7 +42,7 @@ const server = http.createServer(async (req, res) => {
     console.log(`Server: ${req.method} ${req.url} ${statusCode}`);
   }
   // --------------- POST ----------------------
-  if (req.url === "/api/avatar" && req.method.toLowerCase() === "post") {
+  if (req.url === AVATAR_API_ROUT && req.method.toLowerCase() === "post") {
     const form = formidable({});
 
     form.parse(req, (err, fields, files) => {
@@ -51,15 +54,23 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       const prevpath = files.avatar[0].filepath;
-      const path = `./static/img/users/${getWSUID()}.${
+
+      const path = `${SERVER_IMG_PATH}${fields.id}.${
         files.avatar[0].mimetype.split("/")[1]
       }`;
+
       var is = fs.createReadStream(prevpath);
 
       is.pipe(fs.createWriteStream(path));
       is.on("end", function () {
         fs.unlinkSync(prevpath);
       });
+
+      const clientPath = `${CLIENT_IMG_PATH}${fields.id}.${
+        files.avatar[0].mimetype.split("/")[1]
+      }`;
+      setAvatarPath(clientPath);
+
       res.statusCode = 204;
       res.end();
     });

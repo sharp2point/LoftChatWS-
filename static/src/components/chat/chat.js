@@ -10,6 +10,7 @@ import template from "./template.js";
 export default class Chat extends HTMLElement {
   constructor() {
     super();
+    this.hostAPI = "http://localhost:8000/api/set/avatar";
   }
   connectedCallback() {
     this.innerHTML = template.render();
@@ -24,21 +25,24 @@ export default class Chat extends HTMLElement {
   #autorizeUser(authComponent) {
     authComponent.addEventListener("click", (e) => {
       if (e.target.tagName === "BUTTON") {
-        const ownerName = e.path[1][0].value.trim();
+        const ownerName = e.path[1][0].value.trim(); // забираем имя пользователя
         if (ownerName.length >= 3) {
-          this.ws.init(this, ownerName, this.#callbackWSData);
+          this.ws.init(this, ownerName, this.#callbackWSData); // создать нового пользователя на сервере
 
           authComponent.classList.add("hide");
         }
       }
     });
   }
+
+  // забирает данные события ws:onmessage
   #callbackWSData(data) {
-    // забирает данные события ws:onmessage
     switch (data.type) {
       case "config:id": {
         DB.setOwnerID(data.data.split(":")[0]);
-        this.dom.owner.appendChild(new UserItem(DB.getOwnerID(), this.host));
+        const item = new UserItem(DB.getOwnerID(), this.hostAPI);
+        item.setNewSubscriber(this, this.#callbackChangeAvatar);
+        this.dom.owner.appendChild(item);
         break;
       }
       case "config:users": {
@@ -52,10 +56,18 @@ export default class Chat extends HTMLElement {
     }
     this.#updateUsers();
   }
+
+  //забирает сообщения из чата
   #callbackChat(message) {
-    //забирает сообщения из чата
     this.ws.sendUserMessage({ ownerId: DB.getOwnerID(), data: message });
   }
+
+  //сообщает на сервер об изменениях аватара пользователя
+  #callbackChangeAvatar(uuid) {
+    this.ws.changeAvatar(uuid);
+  }
+
+  // обновляет список пользователей
   #updateUsers() {
     const users = DB.getUsers();
     this.dom.chatBlock.setUsersCounter(DB.getUsers().size);

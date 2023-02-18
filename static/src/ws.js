@@ -14,6 +14,9 @@ export default class {
     };
     this.ws.onclose = () => {};
   }
+  changeAvatar(uuid) {
+    this.ws.send(JSON.stringify({ type: "config:avatar", data: uuid }));
+  }
   sendUserMessage(message) {
     this.ws.send(JSON.stringify({ type: "message", data: message }));
   }

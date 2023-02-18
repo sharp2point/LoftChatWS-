@@ -1,8 +1,11 @@
 import { WebSocketServer } from "ws";
 import { v4 as uuid } from "uuid";
+import * as fs from "node:fs";
+import { readdir } from "node:fs";
 
 const clients = new Map(); // ws: {id: uuid, name: "Evgeny", avatar: "image path", hi: "hello all !"}
 const messages = [];
+let avatarPath = "";
 let id;
 
 export const getWSUID = () => id;
@@ -45,13 +48,19 @@ const sendMessageAll = (message) => {
     );
   });
 };
-const changeWSAvatar = (pathAvatar) => {
-  ws.send(
-    JSON.parse({
-      type: "config:avatar",
-      data: { id: getWSUID(), path: pathAvatar },
-    })
-  );
+export const setAvatarPath = (path) => {
+  avatarPath = path;
+};
+const getAvatarPath = () => {
+  return avatarPath;
+};
+const setAvatarByID = (id) => {
+  for (let data of clients.values()) {
+    if (data.data.id === id) {
+      data.data.avatar = getAvatarPath();
+      break;
+    }
+  }
 };
 /*----------------------------------------------*/
 export const createWSServer = (server) => {
@@ -65,6 +74,14 @@ export const createWSServer = (server) => {
       switch (data.type) {
         case "config:client": {
           uID(ws, newClient(ws, id, data));
+          break;
+        }
+        case "config:avatar": {
+          setTimeout(() => {
+            setAvatarByID(data.data);
+            updateUsers();
+          }, 1000);
+
           break;
         }
         case "message": {

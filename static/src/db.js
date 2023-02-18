@@ -10,7 +10,9 @@ export default new (class {
     return this.ownerID;
   }
   setUsers(value) {
+    this.clear();
     value.forEach((data) => {
+      console.log("DB", data.id);
       this.usersMap.set(data.id, {
         name: data.name,
         avatar: data.avatar,
@@ -23,5 +25,8 @@ export default new (class {
   }
   getUserFromID(id) {
     return this.usersMap.get(id);
+  }
+  clear() {
+    this.usersMap = new Map();
   }
 })();

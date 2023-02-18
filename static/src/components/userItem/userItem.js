@@ -2,10 +2,12 @@ import template from "./template.js";
 import DB from "../../db.js";
 
 export default class UserItem extends HTMLElement {
-  constructor(ownerId, host = "") {
+  constructor(ownerId, host = "", fnc) {
     super();
+    this.ownerId = ownerId;
     this.owner = DB.getUserFromID(ownerId);
     this.host = host;
+    this.subscribers = [];
   }
   connectedCallback() {
     this.innerHTML = template.render({
@@ -13,6 +15,7 @@ export default class UserItem extends HTMLElement {
       name: this.owner.name,
       hi: this.owner.hi,
       host: this.host,
+      ownerId: this.ownerId,
     });
     this.dom = template.map(this);
     if (this.host) {
@@ -44,7 +47,13 @@ export default class UserItem extends HTMLElement {
 
     this.dom.dialogFile.addEventListener("change", (e) => {
       this.dom.dialogForm.submit();
+      this.subscribers.forEach((subs) => {
+        subs.callback.call(subs.scope, this.ownerId);
+      });
     });
+  }
+  setNewSubscriber(scope, fnc) {
+    this.subscribers.push({ scope: scope, callback: fnc });
   }
 }
 
