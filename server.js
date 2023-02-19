@@ -4,7 +4,10 @@ import * as path from "node:path";
 import * as dotenv from "dotenv";
 import formidable, { errors as formidableErrors } from "formidable";
 import { MIME_TYPES } from "./src/utils/mime.js";
-import { createWSServer, setAvatarPath } from "./ws_server.js";
+import { createWSServer } from "./ws.js";
+
+import { User, Message } from "./src/db/dbmodel.js";
+import DB from "./src/db/db.js";
 
 dotenv.config();
 
@@ -12,7 +15,7 @@ const PORT = process.env.PORT;
 const AVATAR_API_ROUT = process.env.AVATAR_API_ROUT;
 const SERVER_IMG_PATH = process.env.SERVER_IMG_PATH;
 const CLIENT_IMG_PATH = process.env.CLIENT_IMG_PATH;
-const STATIC_PATH = path.join(process.cwd(), "./static/");
+const STATIC_PATH = path.join(process.cwd(), "./public/");
 const toBool = [() => true, () => false];
 
 const prepareFile = async (url) => {
@@ -69,7 +72,7 @@ const server = http.createServer(async (req, res) => {
       const clientPath = `${CLIENT_IMG_PATH}${fields.id}.${
         files.avatar[0].mimetype.split("/")[1]
       }`;
-      setAvatarPath(clientPath);
+      // setAvatarPath(clientPath);
 
       res.statusCode = 204;
       res.end();
