@@ -23,16 +23,16 @@ export default class Chat extends HTMLElement {
     this.host = this.getAttribute("host");
     this.ws = new WS(this.host);
 
-    this.#autorizeUser(this.dom.auth);
+    this.#autorizeUser();
   }
-  #autorizeUser(authComponent) {
-    authComponent.addEventListener("click", (e) => {
+  #autorizeUser() {
+    this.dom.auth.addEventListener("click", (e) => {
       if (e.target.tagName === "BUTTON") {
-        const ownerName = e.path[1][0].value.trim(); // забираем имя пользователя
+        const ownerName = this.dom.auth.form.elements.nik.value.trim(); // забираем имя пользователя
         if (ownerName.length >= 3) {
           this.ws.init(this, ownerName, this.#callbackWSData); // создать нового пользователя на сервере
 
-          authComponent.classList.add("hide");
+          this.dom.auth.classList.add("hide");
         }
       }
     });
