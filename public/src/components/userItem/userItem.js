@@ -18,10 +18,45 @@ export default class UserItem extends HTMLElement {
       ownerId: this.ownerId,
     });
     this.dom = template.map(this);
+
     if (this.host) {
+      this.#setDND();
       this.dom.dialog.style.display = "none";
       this.#changeAvatarDialog();
     }
+  }
+  #setDND() {
+    this.dom.avatar.addEventListener(
+      "dragover",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      false
+    );
+    this.dom.avatar.addEventListener(
+      "drop",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        let dt = e.dataTransfer;
+        let file = dt.files[0];
+        console.log("DROP", file);
+        this.#uploadToServerDND(file);
+      },
+      false
+    );
+  }
+  #uploadToServerDND(file) {
+    let formData = new FormData();
+
+    formData.append("avatar", file);
+    formData.append("id", this.ownerId);
+
+    fetch(this.host, {
+      method: "POST",
+      body: formData,
+    });
   }
   #containsClass(e, className) {
     return e.target.classList.contains(className);
