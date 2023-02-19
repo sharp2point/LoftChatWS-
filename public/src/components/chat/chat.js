@@ -53,16 +53,15 @@ export default class Chat extends HTMLElement {
       }
       case "config:users": {
         DB.setUsers(data.data);
+        if (DB.getOwnerID()) this.#refreshOwnerUser();
         break;
-      }
-      case "config:owner": {
-        this.#refreshOwnerUser();
       }
       case "message": {
         this.dom.chatBlock.addNewMessage(JSON.parse(data.data));
         break;
       }
     }
+    this.dom.chatBlock.updateChat();
     this.#updateUsers();
   }
 

@@ -57,8 +57,9 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       const prevpath = files.avatar[0].filepath;
+      const ownerID = fields.id[0];
 
-      const path = `${SERVER_IMG_PATH}${fields.id}.${
+      const path = `${SERVER_IMG_PATH}${ownerID}.${
         files.avatar[0].mimetype.split("/")[1]
       }`;
 
@@ -69,10 +70,10 @@ const server = http.createServer(async (req, res) => {
         fs.unlinkSync(prevpath);
       });
 
-      const clientPath = `${CLIENT_IMG_PATH}${fields.id}.${
+      const clientPath = `${CLIENT_IMG_PATH}${ownerID}.${
         files.avatar[0].mimetype.split("/")[1]
       }`;
-      // setAvatarPath(clientPath);
+      DB.setUserAvatar(ownerID, clientPath);
 
       res.statusCode = 204;
       res.end();

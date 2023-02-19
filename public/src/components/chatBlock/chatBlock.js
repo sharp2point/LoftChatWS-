@@ -36,6 +36,14 @@ export default class Post extends HTMLElement {
   setNewSubscriber(scope, fnc) {
     this.subscriber = { scope: scope, callback: fnc };
   }
+  updateChat() {
+    const messages = this.dom.chat.children;
+    if (messages.length) {
+      for (const child of messages) {
+        child.update();
+      }
+    }
+  }
   addNewMessage(message) {
     const owner = DB.getUserFromID(message.ownerID);
     const avatarPath = owner.avatar;
@@ -45,7 +53,7 @@ export default class Post extends HTMLElement {
     function setData(isAvatar) {
       const path = isAvatar ? avatarPath : `./img/default.png`;
       return {
-        ownerId: message.ownerId,
+        ownerId: message.ownerID,
         avatar: path,
         name: owner.name,
         text: message.text,

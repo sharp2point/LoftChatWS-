@@ -12,21 +12,32 @@ export default {
     return `${this.html(props)}${this.css(props)}`;
   },
   html(props) {
-    return `
-          <header class="chat-messages-header">
-            <h1>Чат</h1>
-            <span class="users-count">0 участника</span>
-          </header>
-          <div class="chat-messages-chat"></div>
-          <div class="post">
-            <input class="post-message" type="text" placeholder="Введите сообщение..."/>
-            <button class="post-send">Отправить</button>
+    return `<div class="chat-messages-out">
+              <header class="chat-messages-header">
+                <h1>Чат</h1>
+                <span class="users-count">0 участника</span>
+              </header>
+              <div class="chat-messages-chat"></div>
+              <div class="post">
+                <input class="post-message" type="text" placeholder="Введите сообщение..."/>
+                <button class="post-send">Отправить</button>
+              </div>
           </div>
         `;
   },
   css(props) {
     return `<style>  
+            .chat-messages-out{
+              width:95%;
+              height:99%;
+              display: flex;
+              flex-direction:column;
+              justify-content: space-between;
+              align-items: flex-start;
+              padding-right: 1rem;
+            }
             .chat-messages-header{  
+              width:95%;
               height:56px;
               padding-inline:0.5rem;
               background: var(--background-color2);
@@ -39,7 +50,6 @@ export default {
               color: #FFFFFF;
             }
             .chat-messages-header .users-count{
-              font-family: 'Ubuntu';
               font-style: normal;
               font-weight: 300;
               font-size: 0.8rem;
@@ -47,19 +57,27 @@ export default {
               color: #7F91A4;
             }
             .chat-messages-chat{
-              width:100%;
+              flex-basis: 100%;
+              width:95%;
               height:330px;
               background: var(--background-color);
               color: white;
+              overflow: none;
+              overflow-y:scroll;
+            }
+            .chat-messages-chat::-webkit-scrollbar{
+              display: none;
             }
             .post{
                 display:flex;
+                gap:1rem;
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
                 background: var(--background-color2);
                 height:56px;
-                padding-inline:0.5rem;
+                width:95%;
+                padding-inline:1rem;
             }
             .post-message{
                 border:none;

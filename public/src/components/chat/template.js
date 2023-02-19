@@ -65,12 +65,9 @@ export default {
           display: none;
         }
         .chat-messages{
-          display: flex;
-          flex-direction:column;
-          justify-content: space-between;
-          align-items:stretch;
-          width:584px;
-          height:100%;
+          width:95%;
+          height:95%;
+
         }
         .menu-button{
           position:absolute;

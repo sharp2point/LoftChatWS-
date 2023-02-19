@@ -1,18 +1,13 @@
-import { User, Message } from "./dbmodel.js";
-
 export default new (class DB {
   /* type user -> { uuid: {ws:ws, data:{id: uuid, name: "Evgeny", avatar: "image path", hi: "hello all !"}} } */
   /* type message -> {id: { ownerId:user_uuid, text: message }} */
   constructor() {
     this.users = new Map();
     this.messages = new Map();
-    this.ownerID;
+    this.subscribers = [];
   }
-  setOwnerID(id) {
-    this.ownerID = id;
-  }
-  getOwnerID() {
-    return this.ownerID;
+  addSubscriber(scope, fnc) {
+    this.subscribers.push({ scope: scope, callback: fnc });
   }
   deleteUser(ws) {
     for (let user of this.users.values()) {
@@ -40,5 +35,12 @@ export default new (class DB {
   }
   getMessagesAll() {
     return this.messages;
+  }
+  setUserAvatar(id, avatarPath) {
+    const user = this.getUser(id);
+    user.data.avatar = avatarPath;
+    this.subscribers.forEach((subs) => {
+      subs.callback.call(subs.scope);
+    });
   }
 })();
