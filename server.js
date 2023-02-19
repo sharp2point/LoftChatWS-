@@ -4,12 +4,18 @@ import * as path from "node:path";
 import * as dotenv from "dotenv";
 import formidable, { errors as formidableErrors } from "formidable";
 import { MIME_TYPES } from "./src/utils/mime.js";
-import { createWSServer } from "./ws_server.js";
+import { createWSServer } from "./ws.js";
+
+import { User, Message } from "./src/db/dbmodel.js";
+import DB from "./src/db/db.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT ?? 8001;
-const STATIC_PATH = path.join(process.cwd(), "./static/");
+const PORT = process.env.PORT;
+const AVATAR_API_ROUT = process.env.AVATAR_API_ROUT;
+const SERVER_IMG_PATH = process.env.SERVER_IMG_PATH;
+const CLIENT_IMG_PATH = process.env.CLIENT_IMG_PATH;
+const STATIC_PATH = path.join(process.cwd(), "./public/");
 const toBool = [() => true, () => false];
 
 const prepareFile = async (url) => {
@@ -38,7 +44,8 @@ const server = http.createServer(async (req, res) => {
     file.stream.pipe(res);
     console.log(`Server: ${req.method} ${req.url} ${statusCode}`);
   }
-  if (req.url === "/api/avatar" && req.method.toLowerCase() === "post") {
+  // --------------- POST ----------------------
+  if (req.url === AVATAR_API_ROUT && req.method.toLowerCase() === "post") {
     const form = formidable({});
 
     form.parse(req, (err, fields, files) => {
@@ -50,16 +57,24 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       const prevpath = files.avatar[0].filepath;
-      const name = files.avatar[0].newFilename;
-      const newpath = `./static/img/users/${name}.${
+      const ownerID = fields.id[0];
+
+      const path = `${SERVER_IMG_PATH}${ownerID}.${
         files.avatar[0].mimetype.split("/")[1]
       }`;
+
       var is = fs.createReadStream(prevpath);
-      var os = fs.createWriteStream(newpath);
-      is.pipe(os);
+
+      is.pipe(fs.createWriteStream(path));
       is.on("end", function () {
         fs.unlinkSync(prevpath);
       });
+
+      const clientPath = `${CLIENT_IMG_PATH}${ownerID}.${
+        files.avatar[0].mimetype.split("/")[1]
+      }`;
+      DB.setUserAvatar(ownerID, clientPath);
+
       res.statusCode = 204;
       res.end();
     });

@@ -5,18 +5,17 @@ import template from "./template.js";
 export default class Post extends HTMLElement {
   constructor() {
     super();
-    this.subscribers = [];
+    this.subscriber;
   }
   connectedCallback() {
     this.innerHTML = template.render();
     this.dom = template.map(this);
 
-    this.dom.send.addEventListener("click", (e) => {
+    this.dom.post.addEventListener("submit", (e) => {
+      e.preventDefault();
       const message = this.dom.message.value.trim();
       if (message) {
-        this.subscribers.forEach((subs) => {
-          subs.callback.call(subs.scope, message);
-        });
+        this.subscriber.callback.call(this.subscriber.scope, message);
       }
     });
   }
@@ -36,26 +35,39 @@ export default class Post extends HTMLElement {
     this.dom.counter.innerHTML = `${value} ${end[base]}`;
   }
   setNewSubscriber(scope, fnc) {
-    this.subscribers.push({ scope: scope, callback: fnc });
+    this.subscriber = { scope: scope, callback: fnc };
+  }
+  updateChat() {
+    const messages = this.dom.chat.children;
+    if (messages.length) {
+      for (const child of messages) {
+        child.update();
+      }
+    }
   }
   addNewMessage(message) {
+    const owner = DB.getUserFromID(message.ownerID);
+    const avatarPath = owner.avatar;
     const avatar = new Image();
-    avatar.src = `./img/users/${message.ownerId}.png`;
-    function setData(isAvatar){
-      const path = isAvatar ? `./img/users/${message.ownerId}.png`: `./img/default.png`;
+    avatar.src = avatarPath;
+
+    function setData(isAvatar) {
+      const path = isAvatar ? avatarPath : `./img/default.png`;
       return {
-        ownerId: message.ownerId,
+        ownerId: message.ownerID,
         avatar: path,
-        name: DB.getUserFromID(message.ownerId),
-        text: message.data,
+        name: owner.name,
+        text: message.text,
         time: new Date(Date.now()).toTimeString().slice(0, 8),
-      }
+      };
     }
     avatar.addEventListener("load", () => {
       this.dom.chat.appendChild(new MessageChat(setData(true)));
+      this.dom.chat.scroll({ top: 100, behavior: "smooth" });
     });
     avatar.addEventListener("error", () => {
       this.dom.chat.appendChild(new MessageChat(setData(false)));
+      this.dom.chat.scroll({ top: 100000, behavior: "smooth" });
     });
   }
 }

@@ -52,7 +52,7 @@ export default {
     .owner-avatar{
         width:33px;
         height:33px;
-        object-fit:content;
+        object-fit:cover;
         border-radius:50%;
         margin-right:0.5rem;
     }

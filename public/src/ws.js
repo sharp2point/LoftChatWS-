@@ -1,3 +1,5 @@
+import DB from "./db.js";
+
 export default class {
   constructor(host) {
     this.host = host;
@@ -12,7 +14,9 @@ export default class {
     this.ws.onmessage = (msg) => {
       fnc.call(scope, JSON.parse(msg.data));
     };
-    this.ws.onclose = () => {};
+  }
+  changeAvatar(uuid) {
+    this.ws.send(JSON.stringify({ type: "config:avatar", data: uuid }));
   }
   sendUserMessage(message) {
     this.ws.send(JSON.stringify({ type: "message", data: message }));
