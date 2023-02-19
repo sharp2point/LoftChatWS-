@@ -9,21 +9,32 @@ export default {
     return `${this.css(props)}${this.html(props)}`;
   },
   html(props) {
-    return `<div class="auth">
-                <div class="auth-icon"></div>
-                <header>
-                    <h1>Авторизация</h1>
-                    <span>Введите пожалуйста свой ник для дальнейшей авторизации</span>
-                </header>
-                <form class="auth-form">                
-                    <input class="auth-form__nik" name="nik" type="text" placeholder="Введите свой ник">
-                    <button class="submit">войти</button>
-                </form>
+    return `<div class="auth-back">
+                <div class="auth">
+                    <div class="auth-icon"></div>
+                    <header>
+                        <h1>Авторизация</h1>
+                        <span>Введите пожалуйста свой ник для дальнейшей авторизации</span>
+                    </header>
+                    <form class="auth-form">                
+                        <input class="auth-form__nik" name="nik" type="text" placeholder="Введите свой ник">
+                        <button class="submit">войти</button>
+                    </form>
+                </div>
             </div>`;
   },
   css(props) {
-    return `<style>    
+    return `<style>  
+        .auth-back{
+            width:100vw;
+            height:100vh;
+            background:rgba(60,60,80,0.3);
+        }  
         .auth{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-47%);
             display:flex;
             flex-direction: column;
             justify-content: flex-start;

@@ -11,7 +11,8 @@ export default class Post extends HTMLElement {
     this.innerHTML = template.render();
     this.dom = template.map(this);
 
-    this.dom.send.addEventListener("click", (e) => {
+    this.dom.post.addEventListener("submit", (e) => {
+      e.preventDefault();
       const message = this.dom.message.value.trim();
       if (message) {
         this.subscriber.callback.call(this.subscriber.scope, message);

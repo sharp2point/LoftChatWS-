@@ -6,6 +6,7 @@ export default {
       message: scope.querySelector(".post-message"),
       chat: scope.querySelector(".chat-messages-chat"),
       send: scope.querySelector(".post-send"),
+      post: scope.querySelector(".post"),
     };
   },
   render(props) {
@@ -18,10 +19,10 @@ export default {
                 <span class="users-count">0 участника</span>
               </header>
               <div class="chat-messages-chat"></div>
-              <div class="post">
+              <form class="post">
                 <input class="post-message" type="text" placeholder="Введите сообщение..."/>
                 <button class="post-send">Отправить</button>
-              </div>
+              </form>
           </div>
         `;
   },
@@ -72,7 +73,7 @@ export default {
                 display:flex;
                 gap:1rem;
                 flex-direction: row;
-                justify-content: space-between;
+                justify-content: flex-start;
                 align-items: center;
                 background: var(--background-color2);
                 height:56px;
@@ -81,7 +82,7 @@ export default {
             }
             .post-message{
                 border:none;
-                width:80%;
+                width:87%;
                 height:2rem;
                 color: white;
                 background:var(--background-color2);
@@ -93,9 +94,15 @@ export default {
                 width: 112px;
                 height: 28px;
                 color:white;
+                border:none;
                 background: #5387C1;
                 border-radius: 5px;
+                transition:all 0.1s ease-in;
             }
+            .post-send:hover{
+              transform: scale(1.05);
+              box-shadow:0 0 2px var(--blue-color), 0 0 6px white;
+          }
         </style>`;
   },
 };

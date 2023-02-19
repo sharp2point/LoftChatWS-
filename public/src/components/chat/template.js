@@ -33,8 +33,8 @@ export default {
   css(props) {
     return `<style>
         .chat{
-            width:100vw;
-            height:100vh;
+            width:98vw;
+            height:95vh;
             display: flex;
             flex-direction: row;
             justify-content:flex-start;
@@ -43,9 +43,7 @@ export default {
         }
         .chat-auth{
           position:absolute;
-          top:50%;
-          left:50%;
-          transform: translate(-50%,-47%);
+          
           box-shadow: 0 0 10px rgba(73, 83, 153, 0.5);
         }
         .header{
@@ -72,7 +70,7 @@ export default {
         .menu-button{
           position:absolute;
           top:1.5rem;
-          left:1rem;
+          left:2rem;
           width: 36px;
           height:36px;
           border: none;
