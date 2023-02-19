@@ -63,9 +63,11 @@ export default class Post extends HTMLElement {
     }
     avatar.addEventListener("load", () => {
       this.dom.chat.appendChild(new MessageChat(setData(true)));
+      this.dom.chat.scroll({ top: 100, behavior: "smooth" });
     });
     avatar.addEventListener("error", () => {
       this.dom.chat.appendChild(new MessageChat(setData(false)));
+      this.dom.chat.scroll({ top: 100000, behavior: "smooth" });
     });
   }
 }
